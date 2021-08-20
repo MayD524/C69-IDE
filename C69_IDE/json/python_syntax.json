@@ -1,0 +1,26 @@
+{
+    "key_word_const" : {
+        "foreground" : "blue",
+        "regex" : "True|False|def|class|in|or|and|self"
+    },
+    "key_word_logic" : {
+        "foreground" : "red",
+        "regex" : "while|if|elif|else|for"
+    },
+    "key_word_generic" : {
+        "foreground" : "#a820a1",
+        "regex" : "pass|break|continue|import|from|as|with"
+    },
+    "integer_gen" : {
+        "foreground" : "#00a341",
+        "regex" : "[0-9]"
+    },
+    "string_const" : {
+        "foreground" : "red",
+        "regex" : "(\".+?\")|('.+?')"
+    },
+    "comment" : {
+        "foreground" : "#0b700d",
+        "regex" : "(#.*)|(\"\"\".+?\"\"\")"
+    }
+}

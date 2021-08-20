@@ -1,0 +1,7 @@
+{
+    "python"    : "./json/python_syntax.json",
+    "font_size" : 14,
+    "font_name" : "Helvetica",
+    "background_color" : "black"
+    
+}
