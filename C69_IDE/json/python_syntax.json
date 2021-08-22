@@ -1,7 +1,7 @@
 {
     "key_word_const" : {
         "foreground" : "blue",
-        "regex" : "True|False|def|class|in|or|and|self"
+        "regex" : "True|False|(\\s|\\t|^)def|(\\s|\\t|^)class|\\sin|\\sor|\\snot|\\sand|(\\s|\\t)self|None"
     },
     "key_word_logic" : {
         "foreground" : "red",
@@ -9,7 +9,7 @@
     },
     "key_word_generic" : {
         "foreground" : "#a820a1",
-        "regex" : "pass|break|continue|import|from|as|with"
+        "regex" : "(\\s|\\t)pass|(\\s|\\t)break|(\\s|\\t)continue|(\\s|\\t|^)import|(\\s|\\t|^)from|(\\s|\\t)as|(\\s|\\t|^)with"
     },
     "integer_gen" : {
         "foreground" : "#00a341",

@@ -1,0 +1,8 @@
+{
+    "plugin_mgr" : {
+        "path"     : "$start$/plugins/plugin_mgr.py",
+        "version"  : "0.0.1",
+        "descript" : "Plugin mgr",
+        "enabled"  : true
+    }
+}

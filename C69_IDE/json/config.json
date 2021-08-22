@@ -1,7 +1,17 @@
 {
-    "python"    : "./json/python_syntax.json",
+    "syntaxs" : {
+      "python" : "./json/python_syntax.json"
+    },
+
+    "syntax_exts" : {
+        "py" : "python",
+        "pyw": "python"
+    },
+
+    "root_path" : "C:/Users/Cross/Desktop/C69_IDE",
     "font_size" : 14,
     "font_name" : "Helvetica",
-    "background_color" : "black"
-    
+    "background_color" : "#948e7f",
+    "text_color" : "#424240",
+    "selected_color" : "green"
 }
