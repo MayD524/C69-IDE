@@ -1,5 +1,6 @@
 from main import C69_IDE_main as main
-from tkinter import *
+import tkinter
+
 class settings:
     def __init__(self, gui:main) -> None:
         self.gui = gui

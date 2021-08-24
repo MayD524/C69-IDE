@@ -3,13 +3,14 @@ from tkinter import filedialog
 from tkinter import ttk
 from tkinter import *
 import subprocess
-import asyncio
 import time
 import UPL
 import sys
 import re
 import os
-
+"""
+	Find and replace : https://www.geeksforgeeks.org/create-find-and-replace-features-in-tkinter-text-widget/
+"""
 ## Fixed copy and paste
 CONFIG_PATH = "./json/config.json"
 class CustomText(Text):
@@ -54,6 +55,14 @@ class C69_IDE_main:
         self.Window.configure(background="black")
         self.layout()
         self.autoPlugins()
+        
+        
+        self.Window.bind("<Control-s>", self.saveFile)
+        self.Window.bind("<Control-n>", self.newFile)
+        self.Window.bind("<Control-o>", self.open_File)
+        self.Window.bind("<Control-a>", self.openFolder)
+        self.Window.bind("<Control-x>", self.saveAs)
+        
         self.Window.title("C69 IDE")
         self.Window.mainloop()
     
@@ -69,11 +78,11 @@ class C69_IDE_main:
         self.WinMenu.add_cascade(label="File", menu = self.fileBar)
         self.WinMenu.add_cascade(label="Settings", menu=self.setMenu)
         
-        self.fileBar.add_command(label="Open File", command=self.open_File)
-        self.fileBar.add_command(label="Open Folder", command=self.openFolder)
-        self.fileBar.add_command(label="New File", command=self.newFile)
-        self.fileBar.add_command(label="Save As", command=self.saveAs)
-        self.fileBar.add_command(label="Save", command=self.saveFile)
+        self.fileBar.add_command(label="Open File (ctrl-o)", command=self.open_File)
+        self.fileBar.add_command(label="Open Folder (ctrl-a)", command=self.openFolder)
+        self.fileBar.add_command(label="New File (ctrl-n)", command=self.newFile)
+        self.fileBar.add_command(label="Save As (ctrl-x)", command=self.saveAs)
+        self.fileBar.add_command(label="Save (ctrl-s)", command=self.saveFile)
         
         self.setMenu.add_command(label="Plugin", command=self.pluginMgr)
         self.setMenu.add_command(label="Restart", command=self.restartProg)
@@ -81,9 +90,9 @@ class C69_IDE_main:
         self.editorFrame =ttk.Frame(self.panedwindow,width=400,height=400, relief=SUNKEN)  
         
         self.panedwindow.add(self.listContent, weight=1)  
-        self.panedwindow.add(self.editorFrame, weight=4)  
+        self.panedwindow.add(self.editorFrame, weight=4) 
 
-        self.editorBox = CustomText(self.editorFrame, font=(self.config["font_name"], self.config["font_size"]),bg=self.config["background_color"],fg=self.config["text_color"])
+        self.editorBox = CustomText(self.editorFrame, font=(self.config["font_name"], self.config["font_size"]),bg=self.config["background_color"],fg=self.config["text_color"], undo=True)
          
         self.editorBox.pack(expand=1,fill=BOTH)
         
@@ -134,12 +143,12 @@ class C69_IDE_main:
         self.editorBox.delete("1.0", "end")
         self.editorBox.insert(END, fileData)
     
-    def saveFile(self) -> None:
+    def saveFile(self, *args) -> None:
         print(self.current_filename)
         with open(self.current_filename, "w+") as writer:
             writer.write(self.editorBox.get('1.0', END))
     
-    def newFile(self) -> None:
+    def newFile(self, *args) -> None:
         file_path = filedialog.asksaveasfilename()
         
         try:
@@ -150,7 +159,7 @@ class C69_IDE_main:
         except:
             print("some error")
     
-    def saveAs(self):
+    def saveAs(self, *args):
         file_path = filedialog.asksaveasfilename()
         
         try:
@@ -192,29 +201,25 @@ class C69_IDE_main:
                 pth = pth.replace('$start$', self.config['root_path'])
                 print(f'Running plugin, {pth}/{plugin}.py\nVersion: {self.plugins[plugin]["version"]}\n{self.plugins[plugin]["descript"]}')
                 self.pluginMgr(pth, True)
-    
-    
-    def open_File(self, fileName=None) -> None:
-        if fileName == None:
+     
+    def open_File(self, fileName=None, *args) -> None:
+        if fileName == None or type(fileName) != str:
             path = os.getcwd()
             fileName = self.explorer(path)
         
-        if os.path.isfile(fileName):
-            self.displayFileText(filename=fileName)
-            self.current_filename = fileName
-            file_ext = fileName.rsplit('.', 1)[1]
-            if file_ext in self.config["syntax_exts"].keys():
-                self.current_lang = self.config["syntax_exts"][file_ext]
-                self.current_syntax_settings = UPL.Core.file_manager.getData_json(self.config["syntaxs"][self.current_lang])
-            else:
-                self.current_lang = "GENERIC_PLAIN_TEXT"
-            
-            
-            filename = self.current_filename.rsplit("/", 1)[1]
-            self.currStrVar.set(filename)
-                    
+       
+        self.displayFileText(filename=fileName)
+        self.current_filename = fileName
+        file_ext = fileName.rsplit('.', 1)[1]
+        if file_ext in self.config["syntax_exts"].keys():
+            self.current_lang = self.config["syntax_exts"][file_ext]
+            self.current_syntax_settings = UPL.Core.file_manager.getData_json(self.config["syntaxs"][self.current_lang])
         else:
-            print("Not a file")
+            self.current_lang = "GENERIC_PLAIN_TEXT"
+            
+            
+        filename = self.current_filename.rsplit("/", 1)[1]
+        self.currStrVar.set(filename)
     
     def yview(self) -> None:
         pass
@@ -235,11 +240,10 @@ class C69_IDE_main:
         lines = evt.widget.get('1.0', 'end-1c').split('\n')
         
         for i, line in enumerate(lines):
-            #print(line)
             for x in self.current_syntax_settings.keys():
                 self._applytag(i, line, x, self.current_syntax_settings[x]["regex"], evt.widget) # your tags here
 
-    def openFolder(self) -> None:
+    def openFolder(self, *args) -> None:
         self.directory = self.explorerFolder(os.getcwd())
         if self.directory == '': return
         
@@ -257,16 +261,15 @@ class C69_IDE_main:
         self.node = self.tv.insert('','end',text=self.path,open=True) 
         self.traverse_dir(self.node,self.path)
     
+    def restartProg(self) -> None:
+        subprocess.Popen(f"{sys.executable} {self.config['root_path']}/main.py")
+        sys.exit(0)
+
     @staticmethod
     def explorerFolder(path:str) -> str:
         newDir = filedialog.askdirectory(initialdir=path, title="Select a Folder")
         return newDir
     
-    @staticmethod
-    def restartProg() -> None:
-        subprocess.Popen(f"{sys.executable} ./main.py")
-        sys.exit(0)
-
     @staticmethod
     def explorer(path:str) -> str:
         filename = filedialog.askopenfilename(initialdir=path,
@@ -283,3 +286,6 @@ class C69_IDE_main:
 if __name__ == "__main__":
     config = UPL.Core.file_manager.getData_json(CONFIG_PATH)
     C69_IDE_main(config)
+
+
+

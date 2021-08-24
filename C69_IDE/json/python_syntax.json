@@ -1,4 +1,8 @@
 {
+    "comment" : {
+        "foreground" : "#0b700d",
+        "regex" : "(#.*)|(\"\"\".+?\"\"\")"
+    },
     "key_word_const" : {
         "foreground" : "blue",
         "regex" : "True|False|(\\s|\\t|^)def|(\\s|\\t|^)class|\\sin|\\sor|\\snot|\\sand|(\\s|\\t)self|None"
@@ -18,9 +22,5 @@
     "string_const" : {
         "foreground" : "red",
         "regex" : "(\".+?\")|('.+?')"
-    },
-    "comment" : {
-        "foreground" : "#0b700d",
-        "regex" : "(#.*)|(\"\"\".+?\"\"\")"
     }
 }
